@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Никита & Валерия — Свадебное приглашение</title>
+    <!-- Шрифты Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Great+Vibes&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        cream: '#F9F6F0',
+                        warmbg: '#F4EFE6',
+                        taupe: '#8C7A6B',
+                        darktaupe: '#5C4E43',
+                        accentgold: '#C5B39E',
+                        cardbg: '#FFFFFF'
+                    },
+                    fontFamily: {
+                        serif: ['"Cormorant Garamond"', 'serif'],
+                        script: ['"Great Vibes"', 'cursive'],
+                        sans: ['"Montserrat"', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #F9F6F0;
+            color: #5C4E43;
+            font-family: 'Montserrat', sans-serif;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+        .font-serif { font-family: 'Cormorant Garamond', serif; font-feature-settings: "lnum"; }
+        .font-script { font-family: 'Great Vibes', cursive; }
+        
+        /* Плавные переходы и скролл */
+        html { scroll-behavior: smooth; }
+        
+        /* Кастомный скроллбар */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #F4EFE6; }
+        ::-webkit-scrollbar-thumb { background: #C5B39E; border-radius: 3px; }
+
+        .envelope-overlay {
+            transition: transform 1.2s cubic-bezier(0.77, 0, 0.175, 1), opacity 0.8s ease;
+        }
+        .envelope-open {
+            transform: translateY(-100%);
+            opacity: 0;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body class="bg-cream text-darktaupe antialiased selection:bg-accentgold selection:text-white">
+
+    <!-- Аудио плеер (фоновая музыка) -->
+    <audio id="bg-music" loop>
+        <source src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf756.mp3?filename=gentle-piano-love-110382.mp3" type="audio/mpeg">
+    </audio>
+    <button id="music-toggle" onclick="toggleMusic()" class="fixed top-4 right-4 z-50 bg-white/80 backdrop-blur-md border border-accentgold/40 text-darktaupe p-3 rounded-full shadow-lg hover:bg-white transition flex items-center justify-center w-12 h-12" title="Включить / Выключить музыку">
+        <svg id="music-icon" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"/>
+        </svg>
+    </button>
+
+    <!-- Кнопка панели молодоженов (справа вверху под музыкой) -->
+    <button onclick="openAdminModal()" class="fixed top-4 right-20 z-50 bg-white/80 backdrop-blur-md border border-accentgold/40 text-darktaupe px-3 py-2 rounded-full shadow-lg hover:bg-white transition text-xs font-semibold tracking-wider uppercase">
+        Ответы гостей
+    </button>
+
+    <!-- Экран-конверт приветствия -->
+    <div id="envelope" class="fixed inset-0 z-50 bg-warmbg flex items-center justify-center p-4 envelope-overlay">
+        <div class="max-w-md w-full bg-cream border border-accentgold/50 rounded-2xl p-8 text-center shadow-2xl relative overflow-hidden">
+            <div class="absolute -top-10 -right-10 w-32 h-32 bg-accentgold/10 rounded-full blur-2xl"></div>
+            <div class="absolute -bottom-10 -left-10 w-32 h-32 bg-taupe/10 rounded-full blur-2xl"></div>
+            
+            <p class="font-serif italic text-lg text-taupe mb-2">Приглашение на свадьбу</p>
+            <h1 class="font-serif text-4xl sm:text-5xl font-medium tracking-wide mb-6 text-darktaupe">Никита & Валерия</h1>
+            
+            <div class="w-32 h-40 sm:w-40 sm:h-48 mx-auto rounded-xl overflow-hidden shadow-md mb-6 border-2 border-white">
+                <img id="env-photo" src="4122.jpg" alt="Никита и Валерия" class="w-full h-full object-cover">
+            </div>
+
+            <p class="font-sans text-xs sm:text-sm text-darktaupe/80 mb-8 px-4">
+                С трепетом и радостью приглашаем вас разделить с нами самый важный и счастливый день нашей жизни.
+            </p>
+
+            <button onclick="openInvitation()" class="w-full py-4 bg-darktaupe text-cream rounded-xl font-medium tracking-widest text-sm uppercase shadow-lg hover:bg-taupe transition transform active:scale-95">
+                Открыть приглашение
+            </button>
+        </div>
+    </div>
+
+    <!-- Основной сайт -->
+    <main class="max-w-md mx-auto bg-cream min-h-screen pb-28 shadow-2xl relative">
+
+        <!-- 1. Главный экран (Hero) -->
+        <section class="relative h-[85vh] w-full overflow-hidden flex flex-col justify-end text-center pb-12 px-6">
+            <div class="absolute inset-0">
+                <img id="main-hero-photo" src="4122.jpg" alt="Никита и Валерия" class="w-full h-full object-cover">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-black/30"></div>
+            </div>
+            
+            <div class="relative z-10 text-white">
+                <p class="font-serif italic text-lg sm:text-xl text-cream/90 mb-2">Сохраните нашу дату</p>
+                <h1 class="font-serif text-5xl sm:text-6xl font-normal tracking-wide mb-3">Никита & Валерия</h1>
+                <p class="font-sans text-xs sm:text-sm tracking-[0.25em] uppercase text-cream/80">27 · 01 · 2027</p>
+            </div>
+        </section>
+
+        <!-- 2. Приветственный текст -->
+        <section class="px-6 py-16 text-center">
+            <h2 class="font-serif text-3xl sm:text-4xl font-medium mb-6 text-darktaupe">Дорогие родные и друзья!</h2>
+            <div class="w-12 h-[1px] bg-accentgold mx-auto mb-6"></div>
+            <p class="font-sans text-sm sm:text-base leading-relaxed text-darktaupe/90 mb-6">
+                В нашей жизни скоро произойдет прекрасное событие — день нашей свадьбы. Мы хотим, чтобы этот день был наполнен теплом, улыбками и самыми близкими людьми.
+            </p>
+            <p class="font-sans text-sm sm:text-base leading-relaxed text-darktaupe/90">
+                Будем счастливы разделить этот незабываемый праздник с вами!
+            </p>
+        </section>
+
+        <!-- 3. Таймер обратного отсчета -->
+        <section class="px-6 py-10 bg-warmbg/60 border-y border-accentgold/20 text-center">
+            <h3 class="font-serif text-xl italic text-taupe mb-6">До нашей встречи осталось</h3>
+            <div id="countdown" class="grid grid-cols-4 gap-3 max-w-xs mx-auto">
+                <div class="bg-white/80 p-3 rounded-xl shadow-sm border border-accentgold/30">
+                    <span id="days" class="font-serif text-2xl sm:text-3xl font-bold block text-darktaupe">00</span>
+                    <span class="text-[10px] uppercase tracking-wider text-taupr">дней</span>
+                </div>
+                <div class="bg-white/80 p-3 rounded-xl shadow-sm border border-accentgold/30">
+                    <span id="hours" class="font-serif text-2xl sm:text-3xl font-bold block text-darktaupe">00</span>
+                    <span class="text-[10px] uppercase tracking-wider text-taup">часов</span>
+                </div>
+                <div class="bg-white/80 p-3 rounded-xl shadow-sm border border-accentgold/30">
+                    <span id="minutes" class="font-serif text-2xl sm:text-3xl font-bold block text-darktaupe">00</span>
+                    <span class="text-[10px] uppercase tracking-wider text-taup">минут</span>
+                </div>
+                <div class="bg-white/80 p-3 rounded-xl shadow-sm border border-accentgold/30">
+                    <span id="seconds" class="font-serif text-2xl sm:text-3xl font-bold block text-darktaupe">00</span>
+                    <span class="text-[10px] uppercase tracking-wider text-taup">секунд</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. Календарь -->
+        <section id="calendar-section" class="px-6 py-16 text-center">
+            <p class="font-sans text-xs uppercase tracking-[0.2em] text-taupe mb-2">Дата нашего торжества</p>
+            <h2 class="font-serif text-3xl sm:text-4xl font-medium tracking-wide mb-8 text-darktaupe">ЯНВАРЬ 2027</h2>
+
+            <div class="max-w-xs mx-auto bg-white/90 p-6 rounded-2xl shadow-lg border border-accentgold/30">
+                <div class="grid grid-cols-7 gap-1 text-center mb-3 text-xs font-semibold text-taupe">
+                    <div>ПН</div><div>ВТ</div><div>СР</div><div>ЧТ</div><div>ПТ</div><div>СБ</div><div>ВС</div>
+                </div>
+                <!-- Ровная сетка Январь 2027 (1 янв - пятница) -->
+                <div class="grid grid-cols-7 gap-y-2 text-center text-sm font-sans">
+                    <!-- Пустые ячейки для пн, вт, ср, чт -->
+                    <div></div><div></div><div></div><div></div>
+                    <div class="py-1 text-darktaupe/80">1</div>
+                    <div class="py-1 text-darktaupe/80">2</div>
+                    <div class="py-1 text-darktaupe/80">3</div>
+
+                    <div class="py-1 text-darktaupe/80">4</div>
+                    <div class="py-1 text-darktaupe/80">5</div>
+                    <div class="py-1 text-darktaupe/80">6</div>
+                    <div class="py-1 text-darktaupe/80">7</div>
+                    <div class="py-1 text-darktaupe/80">8</div>
+                    <div class="py-1 text-darktaupe/80">9</div>
+                    <div class="py-1 text-darktaupe/80">10</div>
+
+                    <div class="py-1 text-darktaupe/80">11</div>
+                    <div class="py-1 text-darktaupe/80">12</div>
+                    <div class="py-1 text-darktaupe/80">13</div>
+                    <div class="py-1 text-darktaupe/80">14</div>
+                    <div class="py-1 text-darktaupe/80">15</div>
+                    <div class="py-1 text-darktaupe/80">16</div>
+                    <div class="py-1 text-darktaupe/80">17</div>
+
+                    <div class="py-1 text-darktaupe/80">18</div>
+                    <div class="py-1 text-darktaupe/80">19</div>
+                    <div class="py-1 text-darktaupe/80">20</div>
+                    <div class="py-1 text-darktaupe/80">21</div>
+                    <div class="py-1 text-darktaupe/80">22</div>
+                    <div class="py-1 text-darktaupe/80">23</div>
+                    <div class="py-1 text-darktaupe/80">24</div>
+
+                    <div class="py-1 text-darktaupe/80">25</div>
+                    <div class="py-1 text-darktaupe/80">26</div>
+                    <!-- 27 января - с сердечком -->
+                    <div class="relative py-1 font-bold text-darktaupe flex items-center justify-center">
+                        <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+                            <svg class="w-9 h-9 text-taupe animate-pulse" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"></path>
+                            </svg>
+                        </div>
+                        <span class="relative z-10">27</span>
+                    </div>
+                    <div class="py-1 text-darktaupe/80">28</div>
+                    <div class="py-1 text-darktaupe/80">29</div>
+                    <div class="py-1 text-darktaupe/80">30</div>
+                    <div class="py-1 text-darktaupe/80">31</div>
+                </div>
+            </div>
+
+            <!-- Кнопки календаря -->
+            <div class="mt-6 flex flex-col sm:flex-row gap-3 justify-center max-w-xs mx-auto">
+                <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Свадьба+Никиты+и+Валерии&dates=20270127T130000Z/20270127T210000Z&details=Ждем+вас+на+нашем+празднике!" target="_blank" class="w-full py-3 px-4 bg-darktaupe text-cream rounded-xl text-xs font-semibold tracking-wider uppercase shadow hover:bg-taupe transition text-center">
+                    В Google Календарь
+                </a>
+                <button onclick="downloadICS()" class="w-full py-3 px-4 bg-white border border-accentgold/60 text-darktaupe rounded-xl text-xs font-semibold tracking-wider uppercase shadow-sm hover:bg-warmbg transition">
+                    Скачать в телефон (.ics)
+                </button>
+            </div>
+        </section>
+
+        <!-- 5. Локации -->
+        <section id="locations-section" class="px-6 py-16 bg-warmbg/40">
+            <div class="text-center mb-10">
+                <p class="font-sans text-xs uppercase tracking-[0.2em] text-taupe mb-2">Где пройдет праздник</p>
+                <h2 class="font-serif text-3xl sm:text-4xl font-medium text-darktaupe">Локации дня</h2>
+                <div class="w-12 h-[1px] bg-accentgold mx-auto mt-4"></div>
+            </div>
+
+            <div class="space-y-8">
+                <!-- ЗАГС -->
+                <div class="bg-white rounded-2xl overflow-hidden shadow-md border border-accentgold/30">
+                    <div class="h-48 overflow-hidden relative">
+                        <img id="registry-photo" src="4124.jpg" alt="ЗАГС" class="w-full h-full object-cover">
+                        <div class="absolute top-3 left-3 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider text-darktaupe">
+                            Церемония
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="font-serif text-2xl font-medium mb-2 text-darktaupe">Шипиловский ЗАГС</h3>
+                        <p class="font-sans text-sm text-darktaupe/80 mb-4">
+                            Российская Федерация, Москва город, проезд Шипиловский, д. 27
+                        </p>
+                        <div class="flex gap-2">
+                            <a href="https://yandex.ru/maps/?text=Москва+проезд+Шипиловский+27" target="_blank" class="flex-1 py-2.5 bg-darktaupe text-cream text-center rounded-xl text-xs font-semibold uppercase tracking-wider hover:bg-taupe transition">
+                                Яндекс.Карты
+                            </a>
+                            <button onclick="copyAddress('Российская Федерация, Москва город, проезд. Шипиловский, д. 27', this)" class="px-4 py-2.5 bg-warmbg border border-accentgold/40 text-darktaupe rounded-xl text-xs font-semibold uppercase tracking-wider hover:bg-accentgold/20 transition">
+                                Копировать
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Ресторан -->
+                <div class="bg-white rounded-2xl overflow-hidden shadow-md border border-accentgold/30">
+                    <div class="h-48 overflow-hidden relative">
+                        <img id="banquet-photo" src="4125.webp" alt="Банкетный зал" class="w-full h-full object-cover">
+                        <div class="absolute top-3 left-3 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider text-darktaupe">
+                            Банкет
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="font-serif text-2xl font-medium mb-2 text-darktaupe">Банкетный зал</h3>
+                        <p class="font-sans text-sm text-darktaupe/80 mb-4">
+                            просп. Ленинского Комсомола, 41, Видное (этаж 1)
+                        </p>
+                        <div class="flex gap-2">
+                            <a href="https://yandex.ru/maps/?text=Видное+проспект+Ленинского+Комсомола+41" target="_blank" class="flex-1 py-2.5 bg-darktaupe text-cream text-center rounded-xl text-xs font-semibold uppercase tracking-wider hover:bg-taupe transition">
+                                Яндекс.Карты
+                            </a>
+                            <button onclick="copyAddress('просп. Ленинского Комсомола, 41, Видное (этаж 1)', this)" class="px-4 py-2.5 bg-warmbg border border-accentgold/40 text-darktaupe rounded-xl text-xs font-semibold uppercase tracking-wider hover:bg-accentgold/20 transition">
+                                Копировать
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. План дня -->
+        <section id="schedule-section" class="px-6 py-16 text-center">
+            <p class="font-sans text-xs uppercase tracking-[0.2em] text-taupe mb-2">Как пройдет день</p>
+            <h2 class="font-serif text-3xl sm:text-4xl font-medium mb-10 text-darktaupe">Программа дня</h2>
+
+            <div class="max-w-xs mx-auto space-y-6 relative before:absolute before:left-4 before:top-3 before:bottom-3 before:w-[1px] before:bg-accentgold/50 text-left">
+                
+                <div class="relative pl-10">
+                    <div class="absolute left-2.5 top-1.5 w-3 h-3 bg-darktaupe rounded-full ring-4 ring-cream"></div>
+                    <span class="font-serif text-xl font-bold text-darktaupe block">16:00</span>
+                    <h4 class="font-sans font-semibold text-sm text-darktaupe">Сбор гостей</h4>
+                    <p class="font-sans text-xs text-darktaupe/70 mt-0.5">Встречаемся у ЗАГСа, обнимаемся и настраиваемся на праздник</p>
+                </div>
+
+                <div class="relative pl-10">
+                    <div class="absolute left-2.5 top-1.5 w-3 h-3 bg-darktaupe rounded-full ring-4 ring-cream"></div>
+                    <span class="font-serif text-xl font-bold text-darktaupe block">16:30</span>
+                    <h4 class="font-sans font-semibold text-sm text-darktaupe">Церемония</h4>
+                    <p class="font-sans text-xs text-darktaupe/70 mt-0.5">Самый трогательный момент нашего создания семьи</p>
+                </div>
+
+                <div class="relative pl-10">
+                    <div class="absolute left-2.5 top-1.5 w-3 h-3 bg-darktaupe rounded-full ring-4 ring-cream"></div>
+                    <span class="font-serif text-xl font-bold text-darktaupe block">17:00</span>
+                    <h4 class="font-sans font-semibold text-sm text-darktaupe">Банкет</h4>
+                    <p class="font-sans text-xs text-darktaupe/70 mt-0.5>Праздничный ужин, поздравления, тосты и веселье</p>
+                </div>
+
+                <div class="relative pl-10">
+                    <div class="absolute left-2.5 top-1.5 w-3 h-3 bg-darktaupe rounded-full ring-4 ring-cream"></div>
+                    <span class="font-serif text-xl font-bold text-darktaupe block">21:00</span>
+                    <h4 class="font-sans font-semibold text-sm text-darktaupe">Вечеринка</h4>
+                    <p class="font-sans text-xs text-darktaupe/70 mt-0.5">Танцы, сюрпризы и незабываемый вечер</p>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- 7. Дресс-код -->
+        <section id=
